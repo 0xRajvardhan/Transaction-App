@@ -2,11 +2,18 @@ const express = require("express");
 const rootRouter = require("./routes/index");
 const db = require('./config/db');
 const PORT = 3000;
-const app = express();
 
-db();
+const app = express(); //initializing express application
 
-app.use("/api/v1", rootRouter);
+//CORS middleware for allowing cross-origin requests (different ports, domains)
+var cors = require('cors')
+app.use(cors())
+
+app.use(express.json()); //body parser
+
+db(); //connecting to database
+
+app.use("/api/v1", rootRouter); //using root router for /api/v1 path
 
 
 app.listen(PORT, () => {
