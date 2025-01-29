@@ -6,7 +6,7 @@ const PORT = 3000;
 const app = express(); //initializing express application
 
 //CORS middleware for allowing cross-origin requests (different ports, domains)
-var cors = require('cors')
+const cors = require('cors')
 app.use(cors())
 
 app.use(express.json()); //body parser

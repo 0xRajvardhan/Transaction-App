@@ -49,7 +49,7 @@ router.post("/signup", async (req, res) => {
 router.post("/signin", async (req, res) => {
     const { success } = signinSchema.safeParse(req.body);
     if (!success) {
-        res.send(411).json({ message: 'invalid inputs' })
+        res.status(411).json({ message: 'invalid inputs' })
     }
 
     // checking if the user exists
@@ -71,7 +71,7 @@ router.post("/signin", async (req, res) => {
         return;
     }
 
-    res.send(411).json({
+    res.status(411).json({
         message: "Error while logging in"
     })
 
