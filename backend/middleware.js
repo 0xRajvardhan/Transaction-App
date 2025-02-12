@@ -6,10 +6,10 @@ const authMiddleware = (req, res, next) => {
     const authHeader = req.headers.authorization; //getting the authorization header
 
     //checking if the authorization header is present and starts with 'Bearer'
-    if (!authHeader || !authHeader.startsWith('Bearer')) {
-        res.status(403).json({});
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(403).json({});
     }
-    const token = authHeader.split('')[1]; //getting the token from the authorization header
+    const token = authHeader.split(' ')[1]; //getting the token from the authorization header
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET); //verifying the token

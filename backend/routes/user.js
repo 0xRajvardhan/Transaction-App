@@ -1,6 +1,7 @@
 const express = require('express');
 const { z } = require('zod');
-const User = require('../config/db');
+const { User } = require('../config/db');
+const { Account } = require('../config/db');
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = require('../config');
 const router = express.Router(); //initializing express router
@@ -8,23 +9,23 @@ const { authMiddleware } = require('../middleware');
 
 // Signup Schema Validation using Zod
 const signupSchema = z.object({
-    username: z.string().trim().lowercase().min(4).max(20),
+    username: z.string().trim().min(4).max(20),
     password: z.string(),
     firstName: z.string().trim().min(3).max(20),
     lastName: z.string().trim().min(3).max(20),
 })
 
 // Signin Schema Validation using Zod
-const signinSchema = Zod.object({
-    username: Zod.string().trim().lowercase().min(4).max(20),
-    password: Zod.string(),
+const signinSchema = z.object({
+    username: z.string().trim().min(4).max(20),
+    password: z.string(),
 })
 
 // Update Body Validation using Zod
-const updateBody = Zod.object({
-    password: Zod.string().optional(),
-    firstName: Zod.string().optional(),
-    lastName: Zod.string().optional(),
+const updateBody = z.object({
+    password: z.string().optional(),
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
 });
 
 // Signup Route and Logic
@@ -40,7 +41,7 @@ router.post("/signup", async (req, res) => {
     })
 
     // If the user already exists, return an error
-    if (existingUser._id) {
+    if (existingUser) {
         return res.status(411).json({ message: 'Username already exists' });
     }
 
