@@ -2,7 +2,14 @@ const express = require('express');
 const { authMiddleware } = require('../middleware');
 const { Account } = require('../config/db');
 const mongoose = require('mongoose');
+const { z } = require('zod');
 const router = express.Router(); //initializing express router
+
+/* **ADD ZOD SCHEMA FOR TRANSFER ROUTE AS WELL** */
+const depositSchema = z.object({
+    to: z.string(),
+    amount: z.number().positive(),
+});
 
 //route to get account balance
 router.get("/balance", authMiddleware, async (req, res) => {
@@ -14,6 +21,11 @@ router.get("/balance", authMiddleware, async (req, res) => {
 
 //route to transfer money
 router.post("/transfer", authMiddleware, async (req, res) => {
+    const { success } = depositSchema.safeParse(req.body); //validating the request body using zod
+    if (!success) {
+        return res.status(411).json({ message: 'Invalid inputs' });
+    }
+    
     const session = await mongoose.startSession(); //starting a session
     session.startTransaction(); //starting a transaction
     const { amount, to } = req.body; //getting amount and "to" from request body
