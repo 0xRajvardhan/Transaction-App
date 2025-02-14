@@ -1,3 +1,5 @@
+import { useState } from "react";
+import axios from "axios";
 import { BottomWarning } from "../components/BottomWarning";
 import { Button } from "../components/Button";
 import { Heading } from "../components/Heading";
@@ -5,6 +7,11 @@ import { InputBox } from "../components/InputBox";
 import { SubHeading } from "../components/SubHeading";
 
 const Signup = () => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-300">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
@@ -12,18 +19,34 @@ const Signup = () => {
         <SubHeading label={"Enter your information to create an account"} />
         <form>
           <div className="mb-4">
-            <InputBox label={"First Name"} placeholder={"John"} />
+            <InputBox onChange={e => {
+              setFirstName(e.target.value)
+            }} label={"First Name"} placeholder={"John"} />
           </div>
           <div className="mb-4">
-            <InputBox label={"Last Name"} placeholder={"Doe"} />
+            <InputBox onChange={e => {
+              setLastName(e.target.value)
+            }} label={"Last Name"} placeholder={"Doe"} />
           </div>
           <div className="mb-4">
-            <InputBox label={"Email"} placeholder={"johndoe@example.com"} />
+            <InputBox onChange={e => {
+              setUsername(e.target.value)
+            }} label={"Email"} placeholder={"johndoe@example.com"} />
           </div>
           <div className="mb-6">
-            <InputBox label={"Password"} placeholder={" "} />
+            <InputBox onChange={e => {
+              setPassword(e.target.value)
+            }} label={"Password"} placeholder={" "} />
           </div>
-          <Button label={"Sign up"} />
+          <Button onClick={async () => {
+            const response = await axios.post("http://localhost:3000/api/v1/user/signup", {
+              username,
+              firstName,
+              lastName,
+              password
+            })
+            localStorage.setItem("token", response.data.token)
+          }} label={"Sign up"} />
         </form>
         <BottomWarning label={"Already have an account?"} buttonText={"Sign in"} to={"/signin"} />
       </div>
