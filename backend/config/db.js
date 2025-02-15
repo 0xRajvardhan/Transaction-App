@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const dotenv = require('dotenv');
 dotenv.config(); //loading environment variables
 
-const MONGODB_URL = process.env.MONGODB_URL //getting mongodb url from environment variables
+const MONGODB_URL = process.env.MONGODB_URI //getting mongodb url from environment variables
 
 const db = async () => {
     try {

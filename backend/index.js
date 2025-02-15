@@ -1,7 +1,7 @@
 const express = require("express");
 const rootRouter = require("./routes/index");
 const db = require('./config/db');
-const PORT = 3000;
+const PORT = process.env.PORT || 3000; 
 
 const app = express(); //initializing express application
 
