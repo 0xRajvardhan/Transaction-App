@@ -35,7 +35,7 @@ function User({ user }) {
     return <li key={user.id} className="flex justify-between items-center">
         <div className="flex items-center space-x-4">
             <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-                {user.firstName[0]}{user.lastName[0]}
+                {user.firstName[0].toUpperCase()}{user.lastName[0].toUpperCase()}
             </div>
             <span className="font-semibold text-lg">{user.firstName} {user.lastName}</span>
         </div>
