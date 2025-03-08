@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 
 /* eslint-disable */
 export const Users = () => {
-    // Replace with backend call
     const [users, setUsers] = useState([]);
     const [filter, setFilter] = useState("");
 
@@ -25,8 +24,13 @@ export const Users = () => {
             className="w-full p-2 mb-4 border rounded-md border-slate-300"
         />
         <ul className="space-y-4">
-            {users.map(user => <User user={user} />)}
+            {users.length > 0 ? (
+                users.map(user => <User key={user.id} user={user} />)
+            ) : (
+                <p className="text-gray-500">No users found.</p>
+            )}
         </ul>
+
     </>
 }
 
