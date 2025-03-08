@@ -50,6 +50,11 @@ const accountSchema = new mongoose.Schema({
         ref: 'User',
         required: true,
     },
+    firstName: {
+        type: String,
+        required: true,
+        trim: true,
+    },
     balance: {
         type: Number,
         required: true,

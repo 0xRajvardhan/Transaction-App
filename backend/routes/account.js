@@ -16,7 +16,7 @@ router.get("/balance", authMiddleware, async (req, res) => {
     const account = await Account.findOne({
         userId: req.userId
     });
-    res.json({ balance: account.balance });
+    res.json({ balance: account.balance, userId: account.userId, firstName: account.firstName });
 });
 
 //route to transfer money
@@ -35,7 +35,7 @@ router.post("/transfer", authMiddleware, async (req, res) => {
 
     // Check if the user has enough balance
     if (!account || account.balance < amount) {
-        await session.aboutTransaction(); //aborting the transaction when user has insufficient balance or account not found
+        await session.abortTransaction(); //aborting the transaction when user has insufficient balance or account not found
         return res.status(400).json({ message: "Insufficient balance" })
     }
 

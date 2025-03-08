@@ -12,14 +12,35 @@ const Signup = () => {
   const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL.trimEnd('/')}/api/v1/user/signup`, {
+        username,
+        firstName,
+        lastName,
+        password
+      });
+
+      const data = response.data;
+
+      localStorage.setItem("token", data.token);
+      navigate("/dashboard");
+    } catch (error) {
+      setError(error.response?.data?.message || "Invalid credentials. Please try again.");
+    } 
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-300">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
         <Heading label={"Sign Up"} />
         <SubHeading label={"Enter your information to create an account"} />
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <InputBox onChange={e => {
               setFirstName(e.target.value)
@@ -40,16 +61,9 @@ const Signup = () => {
               setPassword(e.target.value)
             }} label={"Password"} placeholder={" "} />
           </div>
-          <Button onClick={async () => {
-            const response = await axios.post(`${import.meta.env.VITE_API_URL.trimEnd('/')}/api/v1/user/signup`, {
-              username,
-              firstName,
-              lastName,
-              password
-            })
-            localStorage.setItem("token", response.data.token)
-            navigate("/dashboard")
-          }} label={"Sign up"} />
+          <Button label={"Sign up"} />
+          {/* Show Error Message */}
+          {error && <p className="text-red-500 text-center mt-5" >{error}</p>}
         </form>
         <BottomWarning label={"Already have an account?"} buttonText={"Sign in"} to={"/signin"} />
       </div>
@@ -58,4 +72,3 @@ const Signup = () => {
 };
 
 export default Signup;
-

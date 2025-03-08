@@ -57,6 +57,7 @@ router.post("/signup", async (req, res) => {
     // Creating an account for the user
     await Account.create({
         userId,
+        firstName: req.body.firstName,
         balance: 1 + Math.random() * 10000
     })
 

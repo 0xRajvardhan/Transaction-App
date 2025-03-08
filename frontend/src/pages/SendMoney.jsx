@@ -2,8 +2,11 @@ import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const SendMoney = () => {
+    const navigate = useNavigate();
+    const [error, setError] = useState("");
     const [searchParams] = useSearchParams();
     const id = searchParams.get("id");
     const name = searchParams.get("name");
@@ -11,9 +14,18 @@ const SendMoney = () => {
     const [success, setSuccess] = useState(false);
 
     const handleTransfer = () => {
+        setError(""); // Clear previous errors
+        const amountNumber = parseFloat(amount);
+
+        // Validation for amount
+        if (isNaN(amountNumber) || amountNumber <= 0) {
+            setError("Please enter a valid amount.");
+            return;
+        }
+
         axios.post(`${import.meta.env.VITE_API_URL.trimEnd('/')}/api/v1/account/transfer`, {
             to: id,
-            amount: parseFloat(amount)
+            amount: amountNumber
         }, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -25,7 +37,7 @@ const SendMoney = () => {
         })
         .catch((error) => {
             console.error('Error during transfer:', error);
-            alert("Transfer failed. Please try again.");
+            setError(error.response?.data?.error || "Transfer failed. Please try again.");
         });
     }
 
@@ -51,6 +63,7 @@ const SendMoney = () => {
                 <button onClick={handleTransfer} className="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition">
                     Initiate Transfer
                 </button>
+                {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
             </div>
             {/* Success Animation */}
             <AnimatePresence>
@@ -76,7 +89,7 @@ const SendMoney = () => {
                             <h3 className="text-2xl font-bold mb-2">Success!</h3>
                             <p className="text-gray-600 mb-4">Your transfer was completed successfully.</p>
                             <button
-                                onClick={() => setSuccess(false)}
+                                onClick={() => navigate("/dashboard")}
                                 className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition"
                             >
                                 Close
